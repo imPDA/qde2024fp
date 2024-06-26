@@ -1,0 +1,58 @@
+name: final-work
+
+x-common:
+  &common
+  environment:
+    - AIRFLOW_DATABASE_NAME=bitnami_airflow
+    - AIRFLOW_DATABASE_USERNAME=bn_airflow
+    - AIRFLOW_DATABASE_PASSWORD=bitnami1
+    - AIRFLOW_EXECUTOR=CeleryExecutor
+
+
+services:
+  airflow:
+    image: docker.io/bitnami/airflow:2
+    container_name: airflow
+    <<: *common
+    environment:
+      - AIRFLOW_USERNAME=user
+      - AIRFLOW_PASSWORD=password
+    volumes:
+      - ../src/dags:/opt/bitnami/airflow/dags
+    ports:
+      - 8080:8080
+
+  postgresql:
+    image: docker.io/bitnami/postgresql:16
+    volumes:
+      - postgresql_data:/bitnami/postgresql
+    environment:
+      - POSTGRESQL_DATABASE=bitnami_airflow
+      - POSTGRESQL_USERNAME=bn_airflow
+      - POSTGRESQL_PASSWORD=bitnami1
+      - ALLOW_EMPTY_PASSWORD=yes  # only for development !!!
+
+  redis:
+    image: docker.io/bitnami/redis:7.0
+    volumes:
+      - redis_data:/bitnami
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes  # only for development !!!
+
+  airflow-scheduler:
+    image: docker.io/bitnami/airflow-scheduler:2
+    <<: *common
+    environment:
+      - AIRFLOW_WEBSERVER_HOST=airflow
+
+  airflow-worker:
+    image: docker.io/bitnami/airflow-worker:2
+    <<: *common
+    environment:
+      - AIRFLOW_WEBSERVER_HOST=airflow
+
+volumes:
+  postgresql_data:
+    driver: local
+  redis_data:
+    driver: local
