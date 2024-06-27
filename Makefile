@@ -15,6 +15,10 @@ logs:
 down:
 	${DC} ${APP} down
 
+.PHONY: down-v
+down-v:
+	${DC} ${APP} down -v
+
 .PHONY: restart
 restart:
 	make down
