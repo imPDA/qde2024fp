@@ -21,6 +21,7 @@ isort = "^5.13.2"
 ruff = "^0.4.10"
 
 [tool.poetry.group.dev.dependencies]
+apache-airflow-providers-postgres = "^5.11.2"
 
 [tool.ruff.lint]
 select = [
@@ -38,5 +39,5 @@ ignore = []
 quote-style = "single"
 
 [tool.ruff.lint.isort]
-known-third-party = ["airflow"]
-known-first-party = []
+known-third-party = ["airflow", "sqlalchemy"]
+known-first-party = ["utils"]

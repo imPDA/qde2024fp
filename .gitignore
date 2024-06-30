@@ -3,3 +3,5 @@ __pycache__/
 *$py.class
 .env
 .idea/
+
+docker-compose/test.yaml

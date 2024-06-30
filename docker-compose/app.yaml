@@ -6,48 +6,44 @@ services:
     image: docker.io/bitnami/airflow:2
     container_name: airflow
     environment:
-      - AIRFLOW_USERNAME=user
-      - AIRFLOW_PASSWORD=password
-      - AIRFLOW_DATABASE_NAME=bitnami_airflow
-      - AIRFLOW_DATABASE_USERNAME=bn_airflow
-      - AIRFLOW_DATABASE_PASSWORD=bitnami1
       - AIRFLOW_EXECUTOR=CeleryExecutor
       - AIRFLOW_LOAD_EXAMPLES=no
+    env_file:
+      - ../.env
     volumes:
       - ../src/dags:/opt/bitnami/airflow/dags
+      - ../requirements.txt:/bitnami/python/requirements.txt
     ports:
       - 8080:8080
 
   airflow-scheduler:
     image: docker.io/bitnami/airflow-scheduler:2
     environment:
-      - AIRFLOW_WEBSERVER_HOST=airflow
-      - AIRFLOW_DATABASE_NAME=bitnami_airflow
-      - AIRFLOW_DATABASE_USERNAME=bn_airflow
-      - AIRFLOW_DATABASE_PASSWORD=bitnami1
       - AIRFLOW_EXECUTOR=CeleryExecutor
       - AIRFLOW_LOAD_EXAMPLES=no
+    env_file:
+      - ../.env
+    volumes:
+      - ../src/dags:/opt/bitnami/airflow/dags
 
   airflow-worker:
     image: docker.io/bitnami/airflow-worker:2
-
     environment:
-      - AIRFLOW_WEBSERVER_HOST=airflow
-      - AIRFLOW_DATABASE_NAME=bitnami_airflow
-      - AIRFLOW_DATABASE_USERNAME=bn_airflow
-      - AIRFLOW_DATABASE_PASSWORD=bitnami1
       - AIRFLOW_EXECUTOR=CeleryExecutor
       - AIRFLOW_LOAD_EXAMPLES=no
+    env_file:
+      - ../.env
+    volumes:
+      - ../src/dags:/opt/bitnami/airflow/dags
 
   postgresql:
     image: docker.io/bitnami/postgresql:16
     volumes:
       - postgresql_data:/bitnami/postgresql
     environment:
-      - POSTGRESQL_DATABASE=bitnami_airflow
-      - POSTGRESQL_USERNAME=bn_airflow
-      - POSTGRESQL_PASSWORD=bitnami1
       - ALLOW_EMPTY_PASSWORD=yes  # only for development !!!
+    env_file:
+      - ../.env
 
   redis:
     image: docker.io/bitnami/redis:7.0
