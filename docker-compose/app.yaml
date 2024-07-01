@@ -8,6 +8,7 @@ services:
     environment:
       - AIRFLOW_EXECUTOR=CeleryExecutor
       - AIRFLOW_LOAD_EXAMPLES=no
+      - AIRFLOW__CORE__LOAD_DEFAULT_CONNECTIONS=false
     env_file:
       - ../.env
     volumes:
@@ -21,20 +22,24 @@ services:
     environment:
       - AIRFLOW_EXECUTOR=CeleryExecutor
       - AIRFLOW_LOAD_EXAMPLES=no
+      - AIRFLOW__CORE__LOAD_DEFAULT_CONNECTIONS=false
     env_file:
       - ../.env
     volumes:
       - ../src/dags:/opt/bitnami/airflow/dags
+      - ../requirements.txt:/bitnami/python/requirements.txt
 
   airflow-worker:
     image: docker.io/bitnami/airflow-worker:2
     environment:
       - AIRFLOW_EXECUTOR=CeleryExecutor
       - AIRFLOW_LOAD_EXAMPLES=no
+      - AIRFLOW__CORE__LOAD_DEFAULT_CONNECTIONS=false
     env_file:
       - ../.env
     volumes:
       - ../src/dags:/opt/bitnami/airflow/dags
+      - ../requirements.txt:/bitnami/python/requirements.txt
 
   postgresql:
     image: docker.io/bitnami/postgresql:16
