@@ -10,44 +10,20 @@ from airflow.models import Param
 from airflow.operators.empty import EmptyOperator
 from airflow.providers.amazon.aws.hooks.s3 import S3Hook
 from airflow.providers.postgres.hooks.postgres import PostgresHook
-from rdkit import Chem
-from rdkit.Chem import AllChem
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from utils.alchemy_tables import CompoundStructures
+from utils.calculations import (
+    calculate_morgan_fingerprints_base64,
+    calculate_morgan_fingerprints_from_inchi_base64,
+)
 
 SOURCE_CONNECTION_ID = 'source_connection_id'
 S3_DESTINATION = 's3_destination'
 S3_BUCKET_CONNECTION_ID = 's3_connection_id'
 S3_BUCKET_NAME = 's3_bucket_name'
 MAX_ROWS_PER_BUNCH = 'max_rows_per_bunch'
-
-
-def calculate_morgan_fingerprints_base64(smiles: str) -> str:
-    fingerprint_generator = AllChem.GetMorganGenerator(radius=2, fpSize=2048)
-    try:
-        molecule = Chem.MolFromSmiles(smiles)
-        fingerprint = fingerprint_generator.GetFingerprint(molecule)
-    except Exception as e:
-        print(f'Error occurred: {e}')
-
-        return ''
-
-    return fingerprint.ToBase64()
-
-
-def calculate_morgan_fingerprints_from_inchi_base64(inchi: str) -> str:
-    fingerprint_generator = AllChem.GetMorganGenerator(radius=2, fpSize=2048)
-    try:
-        molecule = Chem.MolFromInchi(inchi)
-        fingerprint = fingerprint_generator.GetFingerprint(molecule)
-    except Exception as e:
-        print(f'Error occurred: {e}')
-
-        return ''
-
-    return fingerprint.ToBase64()
 
 
 def save_df_to_s3(
