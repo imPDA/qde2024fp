@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text
+from sqlalchemy import Boolean, Column, Float, Integer, String, Text
 from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
@@ -85,3 +85,28 @@ class CompoundStructures(Base):
     standard_inchi: str = Column(String(4000))
     standard_inchi_key: str = Column(String(27), nullable=False)
     canonical_smiles: str = Column(String(4000))
+
+
+class MoleculeProperties(Base):
+    __tablename__ = 'molecule_properties'
+
+    chembl_id: str = Column(String(20), primary_key=True, nullable=False)
+    molecule_type: str = Column(String(30))
+    mw_freebase: int = Column(Integer)
+    alogp: int = Column(Integer)
+    psa: int = Column(Integer)
+    cx_logp: int = Column(Integer)
+    molecular_species: str = Column(String(50))
+    full_mwt: int = Column(Integer)
+    aromatic_rings: int = Column(Integer)
+    heavy_atoms: int = Column(Integer)
+
+
+class MoleculeSimilarities(Base):
+    __tablename__ = 'molecule_similarities'
+
+    id: int = Column(Integer, primary_key=True, autoincrement=True)
+    source_molecule: int = Column(String(20), nullable=False)
+    target_molecule: int = Column(String(20), nullable=False)
+    similarity_score: float = Column(Float, nullable=False)
+    has_duplicates_of_last_largest_score: bool = Column(Boolean, nullable=False)
