@@ -321,9 +321,9 @@ with DAG(
 
         selection = (
             select(
-                replace_(MoleculeSimilarities.source_molecule),
-                replace_(MoleculeProperties.aromatic_rings),
-                replace_(MoleculeProperties.heavy_atoms),
+                replace_(MoleculeSimilarities.source_molecule).label('source_molecule'),
+                replace_(MoleculeProperties.aromatic_rings).label('aromatic_rings'),
+                replace_(MoleculeProperties.heavy_atoms).label('heavy_atoms'),
                 func.avg(MoleculeSimilarities.similarity_score).label('avg'),
             )
             .join(
