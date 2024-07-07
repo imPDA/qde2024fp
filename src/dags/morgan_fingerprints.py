@@ -18,6 +18,7 @@ from utils.calculations import (
     calculate_morgan_fingerprints_base64,
     calculate_morgan_fingerprints_from_inchi_base64,
 )
+from utils.telegram_notifier import TelegramNotifier
 
 SOURCE_CONNECTION_ID = 'source_connection_id'
 S3_DESTINATION = 's3_destination'
@@ -33,6 +34,9 @@ def save_df_to_s3(
         df.to_csv(buffer, index=False)
         buffer.seek(0)
         s3_hook.load_file_obj(buffer, key=key, bucket_name=bucket_name, replace=True)
+
+
+default_args = {'owner': 'imPDA', 'on_failure_callback': TelegramNotifier()}
 
 
 with DAG(

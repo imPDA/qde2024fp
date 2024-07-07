@@ -17,6 +17,7 @@ from sqlalchemy.exc import IntegrityError, PendingRollbackError
 from sqlalchemy.orm import Session
 
 from utils.alchemy_tables import Base
+from utils.telegram_notifier import TelegramNotifier
 
 
 def get_class_from_tablename(base, tablename):
@@ -43,6 +44,9 @@ DEFAULT_TABLES_TO_INGEST = [
     'compound_properties',
     'compound_structures',
 ]
+
+
+default_args = {'owner': 'imPDA', 'on_failure_callback': TelegramNotifier()}
 
 
 with DAG(

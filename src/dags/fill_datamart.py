@@ -21,6 +21,7 @@ from utils.alchemy_tables import (
     MoleculeProperties,
     MoleculeSimilarities,
 )
+from utils.telegram_notifier import TelegramNotifier
 
 RDB_CONNECTION_ID = 'postgres_connection_id'
 S3_BUCKET_CONNECTION_ID = 's3_connection_id'
@@ -52,8 +53,12 @@ def replace_on_grand_total(grouped_columns):
     return replace
 
 
+default_args = {'owner': 'imPDA', 'on_failure_callback': TelegramNotifier()}
+
+
 with DAG(
     dag_id='fill_datamart',
+    default_args=default_args,
     params={
         RDB_CONNECTION_ID: Param(
             type='string',
@@ -200,6 +205,8 @@ with DAG(
 
     @task(task_id='create_average_similarity_view')
     def create_average_similarity_view(*, params):
+        raise Exception('Something went wrong')
+
         postgres_hook = PostgresHook(params[RDB_CONNECTION_ID])
         engine = postgres_hook.get_sqlalchemy_engine()
 
